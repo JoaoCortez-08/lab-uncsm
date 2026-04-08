@@ -1,22 +1,32 @@
 const express = require('express');
-const path = requiere('path');
+const path = require('path');
 const app = express();
 const PORT = 3000;
 
-// Middleware para servir archivos estáticos
+// Middleware para archivos estáticos
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Endpoint, persona 3 lo completa
+// ENDPOINT /api/saludo
 app.get('/api/saludo', (req, res) => {
+    const estudiantes = [
+        "Octavio Cortez",
+        "Eduardo Valle",
+        "Eduardo Aguilar"
+    ];
+
     res.json({
-        mensaje: "¡Hola desde el backend de la UNCSM!",
-        estudiantes: ["Pendiente"],
-        Universidad: "Universidad Nacional Casimiro Sotelo Montenegro",
-        unidad: "Unidad II: Herramientas para el desarrollo web"
+        mensaje: "¡Hola desde el backend de la Casimiro Sotelo!",
+        estudiantes: estudiantes,
+        Universidad: "UNCSM - Universidad Nacional Casimiro Sotelo Montenegro",
+        unidad: "Unidad II: Herramientas para el desarrollo Web",
+        fecha: new Date().toLocaleDateString('es-ES'),
+        materia: "Desarrollo de Aplicaciones Web",
+        docente: "Allan Fernando Granizo Bravo"
     });
 });
 
-// Iniciar el servidor...
+// Iniciar servidor
 app.listen(PORT, () => {
-    console.log(`Servidor escuchando en http://localhost:${PORT}`);
+    console.log(`Servidor corriendo en http://localhost:${PORT}`);
+    console.log(`Endpoint: http://localhost:${PORT}/api/saludo`);
 });
