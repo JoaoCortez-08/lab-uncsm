@@ -16,11 +16,13 @@ app.use((req, res, next) => {
 
 // --- MIDDLEWARES DE SEGURIDAD (LOCALES) ---
 const validarAcceso = (req, res, next) => {
-    const token = req.query.token;
-    if (token === 'admin123') { // Credencial válida según la guía
+    const llave = req.query.llave; // Ahora se llamará llave en vez de token
+
+    if (llave === 'Casimiro2026') { // Credencial válida según la guía
+        console.log("Acceso permitido"); // Requisito de consola
         next();
     } else {
-        res.status(401).send('<h1>Acceso no autorizado</h1><p>Se requiere un token válido para acceder.</p>');
+        res.status(401).send("401 - No autorizado");
     }
 };
 
@@ -29,7 +31,6 @@ const validarAcceso = (req, res, next) => {
 app.get('/search', validarAcceso, (req, res) => {
     const terms = req.query.termino || 'No especificado';
     const categoria = req.query.categoria || 'Sin categoría';
-    
     res.json({
         estado: "Búsqueda exitosa",
         terminos: terms,
@@ -48,11 +49,26 @@ app.get('/users/:id', validarAcceso, (req, res) => {
     });
 });
 
+app.get('/api/saludo', verificarAcceso, (req, res) => { // Nueva ruta protegida para el saludo desde el backend
+    console.log("Acceso concedido ✅");
+    res.json({
+        mensaje: "¡Hola desde la API protegida!",
+        nave: "🚀", // La nave que se pide
+        universidad: "Universidad Casimiro Sotelo Montenegro"
+    })
+})
+
 // --- MANEJO DE ERRORES ---
 // Middleware para rutas no definidas
 // DEBE SER EL ÚLTIMO ANTES DEL LISTEN
 app.use((req, res) => {
-    res.status(404).send('<h2>Error 404: Recurso no encontrado</h2><p>La dirección solicitada no existe en este servidor.</p>');
+    res.status(404).send('<h2>Error 404: Recurso no encontrado</h2><p>El diseño personalizado de la Casimiro Sotelo.</p>');
+});
+
+// Middleware de error 500
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send("500 - Fallo interno del servidor");
 });
 
 app.listen(PORT, () => {
